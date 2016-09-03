@@ -55,13 +55,28 @@ public class LexerTests {
 	public void testKWs() {
 		// first argument to runtest is the string to lex; the remaining arguments
 		// are the expected tokens
-		runtest("module false return while haha",
-				new Token(MODULE, 0, 0, "module"),
-				new Token(FALSE, 0, 7, "false"),
-				new Token(RETURN, 0, 13, "return"),
-				new Token(WHILE, 0, 20, "while"),
-				new Token(ID, 0, 26, "haha"),
-				new Token(EOF, 0, 30, ""));
+		runtest("true false if else while",
+				new Token(TRUE, 0, 0, "true"),
+				new Token(FALSE, 0, 5, "false"),
+				new Token(IF, 0, 11, "if"),
+				new Token(ELSE, 0, 14, "else"),
+				new Token(WHILE, 0, 19, "while"),
+				new Token(EOF, 0, 24, ""));
+
+		runtest("type boolean int void",
+				new Token(TYPE, 0, 0, "type"),
+				new Token(BOOLEAN, 0, 5, "boolean"),
+				new Token(INT, 0, 13, "int"),
+				new Token(VOID, 0, 17, "void"),
+				new Token(EOF, 0, 21, ""));
+
+		runtest("break import module public return",
+				new Token(BREAK, 0, 0, "break"),
+				new Token(IMPORT, 0, 6, "import"),
+				new Token(MODULE, 0, 13, "module"),
+				new Token(PUBLIC, 0, 20, "public"),
+				new Token(RETURN, 0, 27, "return"),
+				new Token(EOF, 0, 33, ""));
 	}
 
 	@Test
