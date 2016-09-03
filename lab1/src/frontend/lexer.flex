@@ -88,13 +88,13 @@ Digit = [0-9]
 "*"		{return token(TIMES,yytext());}
 
 /* Identifier */
-({Alpha}|_)({Alpha}|{Digit}|_)*		{return token(ID,yytext());}
+({Alpha}|_)({Alpha}|{Digit}|_)*     {return token(ID,yytext());}
 
 /* Integer literals */
-({Digit}+)(.{Digit}+)? 	{return token(INT_LITERAL,yytext());}
+{Digit}+	    {return token(INT_LITERAL,yytext());}
 
 /* String literals */
-\"[^\"]*\"	{return token(STRING_LITERAL,yytext().substring(1,yylength()-1));}
+\"[^\"]*\"	    {return token(STRING_LITERAL,yytext().substring(1,yylength()-1));}
 
 /* WhiteSpace */
 {WhiteSpace}+	{}

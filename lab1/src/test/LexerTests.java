@@ -136,30 +136,25 @@ public class LexerTests {
 	@Test
 	public void testIntLiteral()
 	{
-		runtest("1.010 + 23",
-				new Token(INT_LITERAL, 0, 0, "1.010"),
-				new Token(PLUS, 0, 6, "+"),
-				new Token(INT_LITERAL, 0, 8, "23"),
-				new Token(EOF, 0, 10, ""));
-	}
-
-	@Test
-	public void testIntLiteralDotEnd()
-	{
-		runtest("123.",
-				new Token(INT_LITERAL, 0, 0, "123"),
-				(Token)null);
+		runtest("1 + 23",
+				new Token(INT_LITERAL, 0, 0, "1"),
+				new Token(PLUS, 0, 2, "+"),
+				new Token(INT_LITERAL, 0, 4, "23"),
+				new Token(EOF, 0, 6, ""));
 	}
 
 	@Test
 	public void testIntLiteralSigned()
 	{
-		runtest("1 + -2",
+		runtest("1 + -2 - +3",
 				new Token(INT_LITERAL, 0, 0, "1"),
 				new Token(PLUS, 0, 2, "+"),
 				new Token(MINUS, 0, 4, "-"),
 				new Token(INT_LITERAL, 0, 5, "2"),
-				new Token(EOF, 0, 6, ""));
+				new Token(MINUS, 0, 7, "-"),
+				new Token(PLUS, 0, 9, "+"),
+				new Token(INT_LITERAL, 0, 10, "3"),
+				new Token(EOF, 0, 11, ""));
 	}
 
 	@Test
