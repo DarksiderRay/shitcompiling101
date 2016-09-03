@@ -101,10 +101,83 @@ public class LexerTests {
 	}
 
 	@Test
-	public void testEmptyString()
+	public void testPunctuation() {
+		runtest("[1] (a) {bcd}",
+				new Token(LBRACKET, 0, 0, "["),
+				new Token(INT_LITERAL, 0, 1, "1"),
+				new Token(RBRACKET, 0, 2, "]"),
+				new Token(LPAREN, 0, 4, "("),
+				new Token(ID, 0, 5, "a"),
+				new Token(RPAREN, 0, 6, ")"),
+				new Token(LCURLY, 0, 8, "{"),
+				new Token(ID, 0, 9, "bcd"),
+				new Token(RCURLY, 0, 12, "}"),
+				new Token(EOF, 0, 13, ""));
+
+		runtest("a,b,c;a;",
+				new Token(ID, 0, 0, "a"),
+				new Token(COMMA, 0, 1, ","),
+				new Token(ID, 0, 2, "b"),
+				new Token(COMMA, 0, 3, ","),
+				new Token(ID, 0, 4, "c"),
+				new Token(SEMICOLON, 0, 5, ";"),
+				new Token(ID, 0, 6, "a"),
+				new Token(SEMICOLON, 0, 7, ";"),
+				new Token(EOF, 0, 8, ""));
+	}
+
+	@Test
+	public void testEmptySource()
 	{
 		runtest("",
 				new Token(EOF, 0, 0, ""));
+	}
+
+	@Test
+	public void testIntLiteral()
+	{
+		runtest("1.010 + 23",
+				new Token(INT_LITERAL, 0, 0, "1.010"),
+				new Token(PLUS, 0, 6, "+"),
+				new Token(INT_LITERAL, 0, 8, "23"),
+				new Token(EOF, 0, 10, ""));
+	}
+
+	@Test
+	public void testIntLiteralDotEnd()
+	{
+		runtest("123.",
+				new Token(INT_LITERAL, 0, 0, "123"),
+				(Token)null);
+	}
+
+	@Test
+	public void testIntLiteralSigned()
+	{
+		runtest("1 + -2",
+				new Token(INT_LITERAL, 0, 0, "1"),
+				new Token(PLUS, 0, 2, "+"),
+				new Token(MINUS, 0, 4, "-"),
+				new Token(INT_LITERAL, 0, 5, "2"),
+				new Token(EOF, 0, 6, ""));
+	}
+
+	@Test
+	public void testIntLiteralZeros()
+	{
+		runtest("0001 + 0002",
+				new Token(INT_LITERAL, 0, 0, "0001"),
+				new Token(PLUS, 0, 5, "+"),
+				new Token(INT_LITERAL, 0, 7, "0002"),
+				new Token(EOF, 0, 11, ""));
+	}
+
+	@Test
+	public void testStringLiteral(){
+		runtest("\"\\n\"",
+				new Token(STRING_LITERAL, 0, 0, "\\n"),
+				new Token(EOF, 0, 4, ""));
+
 	}
 
 	@Test
@@ -120,14 +193,6 @@ public class LexerTests {
 		runtest("\"\"\"",
 				new Token(STRING_LITERAL, 0, 0, ""),
 				(Token)null);
-	}
-
-	@Test
-	public void testStringLiteral(){
-		runtest("\"\\n\"", 
-				new Token(STRING_LITERAL, 0, 0, "\\n"),
-				new Token(EOF, 0, 4, ""));
-
 	}
 
 }
