@@ -91,13 +91,13 @@ Digit = [0-9]
 ({Alpha}|_)({Alpha}|{Digit}|_)*		{return token(ID,yytext());}
 
 /* Integer literals */
-(\+|-)?{Digit}+ 	{return token(INT_LITERAL,yytext());}
+{Digit}+ 	{return token(INT_LITERAL,yytext());}
 
 /* String literals */
-\"[^\"]*\"	{return token(STRING_LITERAL,yytext().substring(1,yylength()-1));}
+\"[^\"\n\r\f]*\"	{return token(STRING_LITERAL,yytext().substring(1,yylength()-1));}
 
 /* WhiteSpace */
-{WhiteSpace}+	{}
+{WhiteSpace}	{}
 
 
 
