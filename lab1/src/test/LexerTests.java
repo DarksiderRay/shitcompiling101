@@ -50,6 +50,18 @@ public class LexerTests {
 				new Token(EQEQ, 0, 0, "=="),
 				new Token(EOF, 0, 2, ""));
 	}
+
+	@Test
+	public void testWhitespaceChars()
+	{
+		runtest("a\nbc	def\nghi   jk",
+				new Token(ID, 0, 0, "a"),
+				new Token(ID, 1, 0, "bc"),
+				new Token(ID, 1, 3, "def"),
+				new Token(ID, 2, 0, "ghi"),
+				new Token(ID, 2, 6, "jk"),
+				new Token(EOF, 2, 8, ""));
+	}
 	
 	@Test
 	public void testKWs() {
@@ -77,6 +89,30 @@ public class LexerTests {
 				new Token(PUBLIC, 0, 20, "public"),
 				new Token(RETURN, 0, 27, "return"),
 				new Token(EOF, 0, 33, ""));
+
+		// Case sensitive?
+		runtest("Break Import module public return",
+				new Token(ID, 0, 0, "Break"),
+				new Token(ID, 0, 6, "Import"),
+				new Token(MODULE, 0, 13, "module"),
+				new Token(PUBLIC, 0, 20, "public"),
+				new Token(RETURN, 0, 27, "return"),
+				new Token(EOF, 0, 33, ""));
+	}
+
+	@Test
+	public void testEmptyString()
+	{
+		runtest("",
+				new Token(EOF, 0, 0, ""));
+	}
+
+	@Test
+	public void testStringLiteralEmpty()
+	{
+		runtest("\"\"",
+				new Token(STRING_LITERAL, 0, 0, ""),
+				new Token(EOF, 0, 2, ""));
 	}
 
 	@Test
