@@ -87,7 +87,7 @@ Digit = [0-9]
 "+"		{return token(PLUS,yytext());}
 "*"		{return token(TIMES,yytext());}
 
-/* Identifier */
+/* Identifier. For 'letters', we assume that only ASCII are accepted. */
 ({Alpha}|_)({Alpha}|{Digit}|_)*     {return token(ID,yytext());}
 
 /* Integer literals */

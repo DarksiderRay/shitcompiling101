@@ -216,7 +216,18 @@ public class LexerTests {
 	
 	@Test
 	public void testUnicode() {
-		// TODO: add unittest where the unicode character has \n or \f or \r part.
+		runtest("\"\u00ea\"",
+				new Token(STRING_LITERAL, 0, 0, "\u00ea"),
+				new Token(EOF, 0, 3, ""));
+		runtest("e \u003D \u0031",
+				new Token(ID, 0, 0, "e"),
+				new Token(EQL, 0, 2, "="),
+				new Token(INT_LITERAL, 0, 4, "1"),
+				new Token(EOF, 0, 5, ""));
+		
+		// We assume that identifier can only be ASCII letters.
+		runtest("\u00ea \u003D \u0031",
+				(Token) null);
 	}
 	
 
@@ -292,6 +303,14 @@ public class LexerTests {
 				new Token(ID, 0, 6, "If"),
 				new Token(ID, 0, 9, "iF"),
 				new Token(EOF, 0, 11, ""));
+		
+		runtest("boolean truetrue = true lah",
+				new Token(BOOLEAN, 0, 0, "boolean"),
+				new Token(ID, 0, 8, "truetrue"),
+				new Token(EQL, 0, 17, "="),
+				new Token(TRUE, 0, 19, "true"),
+				new Token(ID, 0, 24, "lah"),
+				new Token(EOF, 0, 27, ""));
 	}
 	
 	@Test
@@ -319,7 +338,6 @@ public class LexerTests {
 				new Token(SEMICOLON, 1, 16, ";"),
 				new Token(SEMICOLON, 2, 4, ";"),
 				new Token(EOF, 2, 5, ""));
-		
 	}
 
 }
