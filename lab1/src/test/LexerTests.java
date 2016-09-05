@@ -254,6 +254,32 @@ public class LexerTests {
 		runtest("==!",
 				new Token(EQEQ, 0, 0, "=="),
 				(Token) null);
+		
+		runtest("// comment",
+				new Token(DIV, 0, 0, "/"),
+				new Token(DIV, 0, 1, "/"),
+				new Token(ID, 0, 3, "comment"),
+				new Token(EOF, 0, 10, ""));
+		
+		runtest("_/=*!====",
+				new Token(ID, 0, 0, "_"),
+				new Token(DIV, 0, 1, "/"),
+				new Token(EQL, 0, 2, "="),
+				new Token(TIMES, 0, 3, "*"),
+				new Token(NEQ, 0, 4, "!="),
+				new Token(EQEQ, 0, 6, "=="),
+				new Token(EQL, 0, 8, "="),
+				new Token(EOF, 0, 9, ""));
+		runtest("<=>",
+				new Token(LEQ, 0, 0, "<="),
+				new Token(GT, 0, 2, ">"),
+				new Token(EOF, 0, 3, ""));
+		
+		runtest("_if if if_",
+				new Token(ID, 0, 0, "_if"),
+				new Token(IF, 0, 4, "if"),
+				new Token(ID, 0, 7, "if_"),
+				new Token(EOF, 0, 10, ""));
 	}
 	
 	@Test
