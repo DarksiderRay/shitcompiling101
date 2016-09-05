@@ -196,6 +196,12 @@ public class LexerTests {
 	public void testNewline() {
 		runtest("\n",
 				new Token(EOF, 1, 0, ""));
+		
+		// \r \f are also newline characters for JFlex!
+		runtest("\r",
+				new Token(EOF, 1, 0, ""));
+		runtest("\f",
+				new Token(EOF, 1, 0, ""));
 	}
 	
 	@Test
@@ -280,6 +286,12 @@ public class LexerTests {
 				new Token(IF, 0, 4, "if"),
 				new Token(ID, 0, 7, "if_"),
 				new Token(EOF, 0, 10, ""));
+		runtest("if IF If iF",
+				new Token(IF, 0, 0, "if"),
+				new Token(ID, 0, 3, "IF"),
+				new Token(ID, 0, 6, "If"),
+				new Token(ID, 0, 9, "iF"),
+				new Token(EOF, 0, 11, ""));
 	}
 	
 	@Test
@@ -292,6 +304,21 @@ public class LexerTests {
 				new Token(INT_LITERAL, 0, 12, "43"),
 				new Token(SEMICOLON, 0, 14, ";"),
 				new Token(EOF, 0, 15, ""));
+		
+		runtest("if( hello!=\"12 hello\"+12 \n) return returns;\n\t\t\t\t;",
+				new Token(IF, 0, 0, "if"),
+				new Token(LPAREN, 0, 2, "("),
+				new Token(ID, 0, 4, "hello"),
+				new Token(NEQ, 0, 9, "!="),
+				new Token(STRING_LITERAL, 0, 11, "12 hello"),
+				new Token(PLUS, 0, 21, "+"),
+				new Token(INT_LITERAL, 0, 22, "12"),
+				new Token(RPAREN, 1, 0, ")"),
+				new Token(RETURN, 1, 2, "return"),
+				new Token(ID, 1, 9, "returns"),
+				new Token(SEMICOLON, 1, 16, ";"),
+				new Token(SEMICOLON, 2, 4, ";"),
+				new Token(EOF, 2, 5, ""));
 		
 	}
 
