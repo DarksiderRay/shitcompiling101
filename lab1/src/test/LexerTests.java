@@ -172,7 +172,6 @@ public class LexerTests {
 		runtest("\"\\n\"",
 				new Token(STRING_LITERAL, 0, 0, "\\n"),
 				new Token(EOF, 0, 4, ""));
-
 	}
 
 	@Test
@@ -182,12 +181,92 @@ public class LexerTests {
 				new Token(STRING_LITERAL, 0, 0, ""),
 				new Token(EOF, 0, 2, ""));
 	}
+	
+	@Test
+	public void testStringWithWhitespaces() {
+		runtest("\"hello\tworld\"",
+				new Token(STRING_LITERAL, 0, 0, "hello\tworld"),
+				new Token(EOF, 0, 13, ""));
+		runtest("\"\twhat is 42_-_-?+!!\t#@ baby\"",
+				new Token(STRING_LITERAL, 0, 0, "\twhat is 42_-_-?+!!\t#@ baby"),
+				new Token(EOF, 0, 29, ""));
+	}
+	
+	@Test
+	public void testNewline() {
+		runtest("\n",
+				new Token(EOF, 1, 0, ""));
+	}
+	
+	@Test
+	public void testInvalidString() {
+		runtest("\"\n\"",
+				(Token) null);
+		runtest("\"hello\" \n\"\"\"th\nere\"",
+				new Token(STRING_LITERAL, 0, 0, "hello"),
+				new Token(STRING_LITERAL, 1, 0, ""),
+				(Token) null);
+	}
+	
+	@Test
+	public void testUnicode() {
+		// TODO: add unittest where the unicode character has \n or \f or \r part.
+	}
+	
 
 	@Test
 	public void testStringLiteralWithDoubleQuote() {
 		runtest("\"\"\"",
 				new Token(STRING_LITERAL, 0, 0, ""),
 				(Token)null);
+	}
+
+	@Test
+	public void testStringAndIdentifierMixture() {
+		runtest("\"hello\" hello",
+				new Token(STRING_LITERAL, 0, 0, "hello"),
+				new Token(ID, 0, 8, "hello"),
+				new Token(EOF, 0, 13, ""));
+	}
+	
+	@Test
+	public void testComplexIdentifiers() {
+		runtest("_am3 3m_3",
+				new Token(ID, 0, 0, "_am3"),
+				new Token(INT_LITERAL, 0, 5, "3"),
+				new Token(ID, 0, 6, "m_3"),
+				new Token(EOF, 0, 9, ""));
+		runtest("_aAaB8*8",
+				new Token(ID, 0, 0, "_aAaB8"),
+				new Token(TIMES, 0, 6, "*"),
+				new Token(INT_LITERAL, 0, 7, "8"),
+				new Token(EOF, 0, 8, ""));
+	}
+	
+	@Test
+	public void testAmbiguousTokens() {
+		runtest("!==",
+				new Token(NEQ, 0, 0, "!="),
+				new Token(EQL, 0, 2, "="),
+				new Token(EOF, 0, 3, ""));
+		
+		// Invalid last trailing '!'
+		runtest("==!",
+				new Token(EQEQ, 0, 0, "=="),
+				(Token) null);
+	}
+	
+	@Test
+	public void testOrdinaryStatement() {
+		runtest("int _id != -43;",
+				new Token(INT, 0, 0, "int"),
+				new Token(ID, 0, 4, "_id"),
+				new Token(NEQ, 0, 8, "!="),
+				new Token(MINUS, 0, 11, "-"),
+				new Token(INT_LITERAL, 0, 12, "43"),
+				new Token(SEMICOLON, 0, 14, ";"),
+				new Token(EOF, 0, 15, ""));
+		
 	}
 
 }
