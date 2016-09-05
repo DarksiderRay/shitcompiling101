@@ -127,6 +127,37 @@ public class LexerTests {
 	}
 
 	@Test
+	public void testOperators() {
+		runtest("/ == = >= <= > < - != + *",
+				new Token(DIV, 0, 0, "/"),
+				new Token(EQEQ, 0, 2, "=="),
+				new Token(EQL, 0, 5, "="),
+				new Token(GEQ, 0, 7, ">="),
+				new Token(LEQ, 0, 10, "<="),
+				new Token(GT, 0, 13, ">"),
+				new Token(LT, 0, 15, "<"),
+				new Token(MINUS, 0, 17, "-"),
+				new Token(NEQ, 0, 19, "!="),
+				new Token(PLUS, 0, 22, "+"),
+				new Token(TIMES, 0, 24, "*"),
+				new Token(EOF, 0, 25, ""));
+	}
+
+	@Test
+	public void testOperatorsAmbiguousEq() {
+		runtest("!====>=>>=<<=",
+				new Token(NEQ, 0, 0, "!="),
+				new Token(EQEQ, 0, 2, "=="),
+				new Token(EQL, 0, 4, "="),
+				new Token(GEQ, 0, 5, ">="),
+				new Token(GT, 0, 7, ">"),
+				new Token(GEQ, 0, 8, ">="),
+				new Token(LT, 0, 10, "<"),
+				new Token(LEQ, 0, 11, "<="),
+				new Token(EOF, 0, 13, ""));
+	}
+
+	@Test
 	public void testEmptySource()
 	{
 		runtest("",
