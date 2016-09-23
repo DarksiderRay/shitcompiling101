@@ -1,0 +1,96 @@
+Module -> module id { Imports Declarations }
+
+Imports -> Imports Import
+         |  ℷ
+
+Import -> import id ;
+
+Declarations -> Declarations Declaration
+              | ℷ
+
+Declaration -> FunctionDeclaration | FieldDeclaration | TypeDeclaration
+
+FunctionDeclaration -> AccessSpecifier TypeName id ( ParameterList ) { Statements }
+
+Statements -> Statements Statement
+            | ℷ
+
+FieldDeclaration -> AccessSpecifier TypeName id ;
+
+TypeDeclaration -> AccessSpecifier type id = string_literal ;
+
+AccessSpecifier -> public | ℷ
+
+TypeName -> PrimitiveType | ArrayType | id
+
+PrimitiveType -> void | boolean | int
+
+ArrayType -> TypeName [ ]
+
+ParameterList -> ParameterList , Parameter
+               | ℷ
+
+Parameter -> TypeName id
+
+Statement -> LocalVariableDeclaration | BlockStatement | IfStatement
+           | WhileStatement | BreakStatement | ReturnStatement 
+           | ExpressionStatement
+
+LocalVariableDeclaration -> TypeName id ;
+
+BlockStatement -> { Statements }
+
+IfStatement -> if ( Expression ) Statement else Statement
+             | if ( Expression ) Statement
+
+WhileStatement -> while ( Expression ) Statement
+
+BreakStatement -> break ;
+
+ReturnStatement -> return Expression ;
+                 | return ;
+
+ExpressionStatement -> Expression ;
+
+Expression -> Assignment | RightHandSideExpression
+
+Assignment -> LeftHandSideExpression = Expression
+
+LeftHandSideExpression -> id | ArrayAccess
+
+ArrayAccess -> LeftHandSideExpression [ Expression ]
+
+RightHandSideExpression -> ArithmeticExpression
+                         | ArithmeticExpression ComparisonOperator ArithmeticExpression
+
+ComparisonOperator -> EQEQ NEQ LT LEQ GT GEQ
+
+ArithmeticExpression -> ArithmeticExpression AdditiveOperator Term
+                      | Term
+
+AdditiveOperator -> PLUS | MINUS
+
+Term -> Term MultiplicativeOperator Factor | Factor
+
+MultiplicativeOperator -> TIMES | DIV | MOD
+
+Factor -> MINUS Factor | PrimaryExpression
+
+PrimaryExpression -> LeftHandSideExpression
+                   | FunctionCall
+                   | ArrayExpression
+                   | string_literal
+                   | integer_literal
+                   | boolean_literal
+                   | ParenthesisedExpression
+
+FunctionCall -> id ( ExpressionList )
+
+ArrayExpression -> [ NonEmptyExpressionList ]
+
+ParenthesisedExpression -> ( Expression )
+
+ExpressionList -> ExpressionList , Expression
+                | ℷ
+
+NonEmptyExpressionList -> ExpressionList , Expression | Expression
