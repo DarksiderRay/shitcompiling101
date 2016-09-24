@@ -23,7 +23,7 @@
 %goal Module;
 
 // temporary declaration, you can remove this once you have written all other rules
-%goal Dummy;
+// %goal Dummy;
 
 /* TODO: Flesh out the rule for Module, and add rules for other nonterminals. Here is an example
          of a rule you may want to add:
@@ -33,10 +33,165 @@
 		  ;
   */
 
-Module = ;
+Module = MODULE ID LCURLY Imports Declarations RCURLY;
+
+Imports = Imports Import
+		|
+		;
+
+Import = IMPORT ID SEMICOLON;
+
+Declarations = Declarations Declaration
+		| 
+		;
+
+Declaration = FunctionDecl
+		| FieldDecl
+		| TypeDecl
+		;
+
+FunctionDecl = Accessibility Typename ID LPAREN ParamList RPAREN
+			   LCURLY StatementList RCURLY
+		| Accessibility Typename ID LPAREN ParamList RPAREN
+		  LCURLY RCURLY 
+		;
+
+FieldDecl = Accessibility Typename ID SEMICOLON;
+
+TypeDecl = Accessibility TYPE ID EQL STRING_LITERAL SEMICOLON;
+
+Accessibility = PUBLIC
+		|
+		;
+
+Typename = PrimitiveType
+		| ArrayType
+		| ID
+		;
+		
+PrimitiveType = VOID
+		| BOOLEAN
+		| INT
+		;
+		
+ArrayType = Typename LBRACKET RBRACKET;
+
+// ParamList can be empty
+ParamList = Param ParamListTail
+		|
+		;
+		
+ParamListTail = COMMA Param ParamListTail
+		|
+		;
+
+Param = Typename ID;
+
+// StatementList cannot be empty
+StatementList = Statement StatementList
+		|
+		;
+		
+Statement = LocalVarDecl
+		| StatementBlock
+		| IfStatement
+		| WhileStatement
+		| BreakStatement
+		| ReturnStatement
+		| ExpStatement
+		;
+		
+LocalVarDecl = Typename ID SEMICOLON;
+
+StatementBlock = LCURLY StatementList RCURLY
+		| LCURLY RCURLY;
+
+IfStatement = IF LPAREN Exp RPAREN Statement ELSE Statement
+		| IF LPAREN Exp RPAREN Statement
+		;
+		
+WhileStatement = WHILE LPAREN Exp RPAREN Statement;
+
+BreakStatement = BREAK SEMICOLON;
+
+ReturnStatement = RETURN Exp SEMICOLON
+		| RETURN SEMICOLON
+		;
+		
+ExpStatement = Exp SEMICOLON;
+
+// ExpList cannot be empty
+ExpList = Exp ExpListTail;
+		
+ExpListTail = COMMA ExpList
+		|
+		;
+
+Exp = Assignment
+		| RightExp
+		;
+	
+Assignment = LeftExp EQL Exp;
+
+LeftExp = ID
+		| ArrayAccess
+		;
+		
+ArrayAccess = LeftExp LBRACKET Exp RBRACKET;
+
+RightExp = ArithExp CompareOperator ArithExp
+		| ArithExp
+		;
+		
+CompareOperator = EQEQ
+		| NEQ
+		| LT
+		| LEQ
+		| GT
+		| GEQ
+		;
+		
+ArithExp = ArithExp AddOperator Term
+		| Term
+		;
+		
+AddOperator = PLUS | MINUS;
+
+Term = Term MulOperator Factor
+		| Factor
+		;
+		
+MulOperator = TIMES | DIV | MOD;
+
+Factor = MINUS Factor
+		| PrimaryExp
+		;
+		
+PrimaryExp = LeftExp
+		| FunctionCall
+		| ArrayExp
+		| STRING_LITERAL
+		| INT_LITERAL
+		| TRUE
+		| FALSE
+		| ParenExp
+		;
+		
+FunctionCall = ID LPAREN ExpList RPAREN
+		| ID LPAREN RPAREN
+		;
+		
+ArrayExp = LBRACKET ExpList RBRACKET;
+
+ParenExp = LPAREN Exp RPAREN;
+		
+
 
 /**/
 
+
 /* Dummy rule to make the lexer compile. Remove this once you have written all other rules. */	  
+/*
 Dummy = MODULE INT VOID IF ELSE WHILE RETURN BREAK BOOLEAN PUBLIC TRUE FALSE INT_LITERAL STRING_LITERAL ID TYPE IMPORT
            PLUS MINUS TIMES DIV MOD EQEQ NEQ LEQ GEQ LT GT LBRACKET RPAREN COMMA RCURLY LCURLY SEMICOLON RBRACKET LPAREN EQL;
+           */
