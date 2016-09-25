@@ -52,8 +52,6 @@ Declaration = FunctionDecl
 
 FunctionDecl = Accessibility Typename ID LPAREN ParamList RPAREN
 			   LCURLY StatementList RCURLY
-		| Accessibility Typename ID LPAREN ParamList RPAREN
-		  LCURLY RCURLY 
 		;
 
 FieldDecl = Accessibility Typename ID SEMICOLON;
@@ -74,7 +72,10 @@ PrimitiveType = VOID
 		| INT
 		;
 		
-ArrayType = Typename LBRACKET RBRACKET;
+ArrayType = ArrayType LBRACKET RBRACKET
+		  | ID LBRACKET RBRACKET
+		  | PrimitiveType LBRACKET RBRACKET
+		  ;
 
 // ParamList can be empty
 ParamList = Param ParamListTail
@@ -103,8 +104,7 @@ Statement = LocalVarDecl
 		
 LocalVarDecl = Typename ID SEMICOLON;
 
-StatementBlock = LCURLY StatementList RCURLY
-		| LCURLY RCURLY;
+StatementBlock = LCURLY StatementList RCURLY;
 
 IfStatement = IF LPAREN Exp RPAREN Statement ELSE Statement
 		| IF LPAREN Exp RPAREN Statement
@@ -137,7 +137,8 @@ LeftExp = ID
 		| ArrayAccess
 		;
 		
-ArrayAccess = LeftExp LBRACKET Exp RBRACKET;
+ArrayAccess = ArrayAccess LBRACKET Exp RBRACKET
+			| ID LBRACKET Exp RBRACKET;
 
 RightExp = ArithExp CompareOperator ArithExp
 		| ArithExp
