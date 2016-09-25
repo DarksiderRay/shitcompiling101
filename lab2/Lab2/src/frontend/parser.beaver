@@ -118,10 +118,12 @@ ReturnStatement = RETURN Exp SEMICOLON
 		;
 		
 ExpStatement = Exp SEMICOLON;
-		
-ExpList = Exp ExpListTail;
 
-ExpListTail = COMMA ExpList
+ExpList = Exp ExpListTail
+		|
+		;
+
+ExpListTail = COMMA Exp ExpListTail
 			|
 			;
 
@@ -177,7 +179,6 @@ PrimaryExp = LeftExp
 		;
 		
 FunctionCall = ID LPAREN ExpList RPAREN
-		| ID LPAREN RPAREN
 		;
 		
 ArrayExp = LBRACKET Exp ExpListTail RBRACKET;
