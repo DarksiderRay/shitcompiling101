@@ -52,8 +52,6 @@ Declaration = FunctionDecl
 
 FunctionDecl = Accessibility Typename ID LPAREN ParamList RPAREN
 			   LCURLY StatementList RCURLY
-		| Accessibility Typename ID LPAREN ParamList RPAREN
-		  LCURLY RCURLY 
 		;
 
 FieldDecl = Accessibility Typename ID SEMICOLON;
@@ -74,7 +72,10 @@ PrimitiveType = VOID
 		| INT
 		;
 		
-ArrayType = Typename LBRACKET RBRACKET;
+ArrayType = ArrayType LBRACKET RBRACKET
+		  | ID LBRACKET RBRACKET
+		  | PrimitiveType LBRACKET RBRACKET
+		  ;
 
 // ParamList can be empty
 ParamList = Param ParamListTail
@@ -87,7 +88,6 @@ ParamListTail = COMMA Param ParamListTail
 
 Param = Typename ID;
 
-// StatementList cannot be empty
 StatementList = Statement StatementList
 		|
 		;
@@ -103,8 +103,7 @@ Statement = LocalVarDecl
 		
 LocalVarDecl = Typename ID SEMICOLON;
 
-StatementBlock = LCURLY StatementList RCURLY
-		| LCURLY RCURLY;
+StatementBlock = LCURLY StatementList RCURLY;
 
 IfStatement = IF LPAREN Exp RPAREN Statement ELSE Statement
 		| IF LPAREN Exp RPAREN Statement
@@ -120,16 +119,17 @@ ReturnStatement = RETURN Exp SEMICOLON
 		
 ExpStatement = Exp SEMICOLON;
 
-// ExpList cannot be empty
-ExpList = Exp ExpListTail;
-		
-ExpListTail = COMMA ExpList
+ExpList = Exp ExpListTail
 		|
 		;
 
+ExpListTail = COMMA Exp ExpListTail
+			|
+			;
+
 Exp = Assignment
-		| RightExp
-		;
+	| RightExp
+	;
 	
 Assignment = LeftExp EQL Exp;
 
@@ -137,7 +137,8 @@ LeftExp = ID
 		| ArrayAccess
 		;
 		
-ArrayAccess = LeftExp LBRACKET Exp RBRACKET;
+ArrayAccess = ArrayAccess LBRACKET Exp RBRACKET
+			| ID LBRACKET Exp RBRACKET;
 
 RightExp = ArithExp CompareOperator ArithExp
 		| ArithExp
@@ -178,10 +179,9 @@ PrimaryExp = LeftExp
 		;
 		
 FunctionCall = ID LPAREN ExpList RPAREN
-		| ID LPAREN RPAREN
 		;
 		
-ArrayExp = LBRACKET ExpList RBRACKET;
+ArrayExp = LBRACKET Exp ExpListTail RBRACKET;
 
 ParenExp = LPAREN Exp RPAREN;
 		

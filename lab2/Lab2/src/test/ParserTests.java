@@ -14,6 +14,10 @@ public class ParserTests {
 	private void runtest(String src) {
 		runtest(src, true);
 	}
+	
+	private void runfailtest(String src) {
+		runtest(src, false);
+	}
 
 	private void runtest(String src, boolean succeed) {
 		Parser parser = new Parser();
@@ -55,6 +59,17 @@ public class ParserTests {
 			"   import doubleTest;\n" +
 			"   import tripleTest;\n" +
 			"}");
+		runtest(
+			"module TypeDeclaration {" +
+			"	public type publicNoobs = \"immastring\";" +
+			"}"
+			);
+		runtest(
+			"module TypeDeclaration2 {" +
+			"	public type publicNoobs = \"immastring\";" +
+			"   type a = \"asdasd\";" +
+			"}"
+			);
 		runtest(
 			"module FunctionDeclaration {\n" +
 			"	import importer;\n" +
@@ -203,5 +218,215 @@ public class ParserTests {
 			"   }\n" +
 			"}"
 			);
+		runtest(
+			"module WhileStatement {" +
+			"	import whilelieliewhile;" +
+			"   void func() {" +
+			"   	while (a+b) break;" +
+			"	}" +
+			"}"
+			);
+		runtest(
+			"module IfStatementEasy {" +
+			"	import iforelse;" +
+			"   void func() {" +
+			"   	if (a=b) return a;" +
+			"	}" +
+			"}"
+			);
+		runtest(
+			"module IfStatementElse {" +
+			"	import iforelse;" +
+			"   void func() {" +
+			"   	if (a=b) return a; else a=b+1;" +
+			"	}" +
+			"}"
+			);
+		runtest(
+			"module IfStatementChainsaw {" +
+			"	import iforelse;" +
+			"   void func() {" +
+			"   	if (a=b) return a; else if (a=b) {\n" +
+			"   		if (a=b) {\n" +
+			"   			if ((a=b)) if(a=b) if(a=b) break;\n" +
+			"   			if (a=b) if(a=b) {}\n" +
+			"   		}\n" +
+			"       }\n" +
+			"	}\n" +
+			"}"
+			);
+	}
+	
+	@Test
+	public void testWrongConstructs() {
+		runfailtest(
+			"module {}"
+		);
+		runfailtest(
+			"module MissingCurly {"
+		);
+		runfailtest(
+			"nomodule {}"
+		);
+		runfailtest(
+			"module import asd;"
+		);
+		runfailtest(
+			"module 2Modules1Compiler{}\n" +
+			"module 2Compilers1Module{}\n"
+		);
+		runfailtest(
+			"module SpamShit{\n" +
+			"	aasdasdhasjkdhasjkfhasjkdksd\n" +
+			"}"
+		);
+		runfailtest(
+			"module OutofPlaceExp{\n" +
+			"	a = a+b;\n" +
+			"}"
+		);
+		runfailtest(
+			"module FunctionFailParamList{\n" +
+			"	public asd (int a,) {}\n" +
+			"}"
+		);
+		runfailtest(
+			"module FunctionFailParamList{\n" +
+			"	public asd (int a int b) {}\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailFunctionCallMissingSemicolon{\n" +
+			"	void func() {\n" +
+			"      thisisafunction(a+b)\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailFunctionCall{\n" +
+			"	void func() {\n" +
+			"      thisisafunction(a+b,123,4,);\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailIfStatement{\n" +
+			"	void func() {\n" +
+			"      if a+b return;\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailIfStatement{\n" +
+			"	void func() {\n" +
+			"      if (a+b) else return; else return;\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailIfStatement{\n" +
+			"	void func() {\n" +
+			"      if (a+b) else return else return;\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailIfStatement{\n" +
+			"	void func() {\n" +
+			"      if (a+b) else if return;\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailIfStatement{\n" +
+			"	void func() {\n" +
+			"      if (a+b)\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailIfStatement{\n" +
+			"	void func() {\n" +
+			"      else (a+b);\n" +
+			"   }\n" +
+			"}"
+			);
+		runfailtest(
+			"module FailArrayExpEmpty{\n" +
+			"	void func() {\n" +
+			"      [];\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailArrayExp{\n" +
+			"	void func() {\n" +
+			"      [a+2,];\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailArrayExp{\n" +
+			"	void func() {\n" +
+			"      a+2];\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailArrayExp{\n" +
+			"	void func() {\n" +
+			"      [a+2;\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailAssignment{\n" +
+			"	void func() {\n" +
+			"      why=;\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailArrayAccess{\n" +
+			"	void func() {\n" +
+			"      this[];\n" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailMaths{\n" +
+			"	void func() {\n" +
+			"      mathssux=a+b/123/123/123/;" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailMaths{\n" +
+			"	void func() {\n" +
+			"      mathssux=a+b/123+123(321)/(21;" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailMaths{\n" +
+			"	void func() {\n" +
+			"      mathssux=a//2;" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailMaths{\n" +
+			"	void func() {\n" +
+			"      mathssux=array**2;" +
+			"   }\n" +
+			"}"
+		);
+		runfailtest(
+			"module FailMaths{\n" +
+				"	void func() {\n" +
+			"      mathssux=array*2++2;" +
+			"   }\n" +
+			"}"
+		);
 	}
 }
