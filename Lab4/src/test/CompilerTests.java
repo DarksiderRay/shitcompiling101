@@ -200,6 +200,19 @@ public class CompilerTests {
 				22);
 	}
 
+	@Test public void testRemainder() {
+		runtest("module Test {" +
+				"  public int f() {" +
+				"    return 42 % 41;" +
+				"  }" +
+				"}",
+				"Test",
+				"f",
+				new Class<?>[0],
+				new Object[0],
+				1);
+	}
+	
 	@Test public void testNegation() {
 		runtest("module Test {" +
 				"  public int f() {" +
@@ -211,6 +224,93 @@ public class CompilerTests {
 				new Class<?>[0],
 				new Object[0],
 				-42);
+	}
+	
+	@Test public void testAssignment() {
+		runtest("module Test {" +
+				"  public int f() {" +
+				"    int x;" +
+				"    x = 42;" +
+				"    return x;" +
+				"  }" +
+				"}",
+				"Test",
+				"f",
+				new Class<?>[0],
+				new Object[0],
+				42);
+	}
+	
+	@Test public void testIfElsePass() {
+		runtest("module Test {" +
+				"  public int f() {" +
+				"    if(1==1) {" +
+				"      return 42; }" +
+				"    else return 10;" +
+				"  }" +
+				"}",
+				"Test",
+				"f",
+				new Class<?>[0],
+				new Object[0],
+				42);
+	}
+	
+	@Test public void testIfElseFail() {
+		runtest("module Test {" +
+				"  public int f() {" +
+				"    if(1==0) {" +
+				"      return 42; }" +
+				"    else return 10;" +
+				"  }" +
+				"}",
+				"Test",
+				"f",
+				new Class<?>[0],
+				new Object[0],
+				10);
+	}
+	
+	@Test public void testFunctionArgs() {
+		runtest("module Test {" +
+				"  public int f(int x) {" +
+				"    return x;" +
+				"  }" +
+				"}",
+				"Test",
+				"f",
+				new Class<?>[]{int.class},
+				new Object[]{42},
+				42);
+	}
+	
+	@Test public void testFunctionManyArgs() {
+		runtest("module Test {" +
+				"  public boolean f(int x, boolean y) {" +
+				"    return y;" +
+				"  }" +
+				"}",
+				"Test",
+				"f",
+				new Class<?>[]{int.class, boolean.class},
+				new Object[]{true},
+				true);
+	}
+	
+	@Test public void testFunctionCall() {
+		runtest("module Test {" +
+				"  public int f() {" +
+				"    return valuefunc(42);" +
+				"  }" +
+				"  public int valuefunc(int x) {" +
+				"    return x;" +
+				"  }" +
+				"}",
+				"Test",
+				"f",
+				new Class<?>[0],
+				new Object[0],
+				42);
 	}
 
 }
