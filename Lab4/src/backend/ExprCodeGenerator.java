@@ -98,14 +98,20 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	@Override
 	public Value visitIntLiteral(IntLiteral nd) {
 		/* TODO: return something meaningful here */
-		return null;
+		Value intLit = wrap(nd.accept(this));
+		int intVal = nd.getValue();
+		units.add((Unit) IntConstant.v(intVal));
+		return intLit;
 	}
 	
 	/** Generate code for a string literal. */
 	@Override
 	public Value visitStringLiteral(StringLiteral nd) {
 		/* TODO: return something meaningful here */
-		return null;
+		Value strLit = wrap(nd.accept(this));
+		String strVal = nd.getValue();
+		units.add((Unit) StringConstant.v(strVal));
+		return strLit;
 	}
 	
 	/** Generate code for a Boolean literal. */
@@ -113,7 +119,12 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	public Value visitBooleanLiteral(BooleanLiteral nd) {
 		/* TODO: return something meaningful here (hint: translate 'true' to integer
 		 *       constant 1, 'false' to integer constant 0) */
-		return null;
+		Value boolLit = wrap(nd.accept(this));
+		int boolVal;
+		if (nd.getValue() == true) boolVal = 1;
+		else boolVal = 0;
+		units.add((Unit) IntConstant.v(boolVal));
+		return boolLit;
 	}
 	
 	/** Generate code for an array literal. */
